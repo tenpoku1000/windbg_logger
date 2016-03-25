@@ -135,23 +135,23 @@ https://msdn.microsoft.com/ja-jp/windows/hardware/hh852365.aspx
 
 ## 参考資料
 
-* Debugger Commands - Windows 10 hardware dev
+* Debugger Commands - Windows 10 hardware dev  
 https://msdn.microsoft.com/en-us/library/windows/hardware/ff540507(v=vs.85).aspx
-* Kernel and remote debuggers - tutorial - developer Fusion
+* Kernel and remote debuggers - tutorial - developer Fusion  
 http://www.developerfusion.com/article/84367/kernel-and-remote-debuggers/
-* KD Extension DLLs &amp; KDCOM Protocol
+* KD Extension DLLs &amp; KDCOM Protocol  
 http://articles.sysprogs.org/kdvmware/kdcom/
-* j00ru//vx tech blog : Attacking the Host via Remote Kernel Debugger (Virtual Machines)
+* j00ru//vx tech blog : Attacking the Host via Remote Kernel Debugger (Virtual Machines)  
 http://j00ru.vexillium.org/?p=405
-* Just Another Windows Kernel Perl Hacker
+* Just Another Windows Kernel Perl Hacker  
 https://www.blackhat.com/presentations/bh-usa-07/Stewart/Presentation/bh-usa-07-stewart.pdf
-* ChangeLog-0.3.11 - ReactOS Wiki
+* ChangeLog-0.3.11 - ReactOS Wiki  
 https://www.reactos.org/wiki/ChangeLog-0.3.11#KD
-* アプリケーションからのデバイスドライバの呼び出し、制御方法について
+* アプリケーションからのデバイスドライバの呼び出し、制御方法について  
 https://social.msdn.microsoft.com/Forums/windows/ja-JP/6ac17ef7-2c9f-4486-8f75-126fe20d2d50?forum=windowsgeneraldevelopmentissuesja
-* 管理者権限でしかアクセスできません | WDDDC
+* 管理者権限でしかアクセスできません | WDDDC  
 http://www.wdddc.net/node/143
-* IoCreateDeviceSecure problem | Windows Vista Tips
+* IoCreateDeviceSecure problem | Windows Vista Tips  
 http://www.winvistatips.com/threads/iocreatedevicesecure-problem.180268/
-* 0と1の欠片 : [Visual Studio]ドライバをビルドすると、&quot;22.9.7: DriverVer set to a date in the future (postdated DriverVer not allowed) in \xxxx.inf.&quot;というエラーになる
+* 0と1の欠片 : [Visual Studio]ドライバをビルドすると、&quot;22.9.7: DriverVer set to a date in the future (postdated DriverVer not allowed) in \xxxx.inf.&quot;というエラーになる  
 http://blog.livedoor.jp/cielo_cielo/archives/65844807.html
