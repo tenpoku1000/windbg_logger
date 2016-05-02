@@ -11,8 +11,8 @@
 #include "utils.h"
 
 typedef struct PACKET_{
-	KD_PACKET header;
-	UINT8 data[];
+    KD_PACKET header;
+    UINT8 data[];
 }PACKET;
 
 bool write_windbg_packet_log(LPVOID buffer, DWORD bytes);

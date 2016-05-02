@@ -20,6 +20,8 @@ typedef struct handles_{
     HANDLE UART2;
 }handles;
 
+static CRITICAL_SECTION critical_section = { 0 };
+
 static bool init(handles* p);
 static bool recv_named_pipe_send_com(handles* p);
 static unsigned __stdcall recv_com_send_named_pipe(void* arg);
@@ -69,7 +71,9 @@ static bool init(handles* p)
 
     RemoveMenu(GetSystemMenu(GetConsoleWindow(), FALSE), SC_CLOSE, MF_BYCOMMAND);
 
-    ini_values values;
+    InitializeCriticalSection(&critical_section);
+
+	ini_values values;
 
     if (false == get_ini_values(&values)){
 
@@ -141,12 +145,18 @@ static bool recv_named_pipe_send_com(handles* p)
             return false;
         }
 
+        EnterCriticalSection(&critical_section);
+
         put_log("\n --- Send to target PC. --- \n");
 
         if (false == write_windbg_packet_log(buffer, total_bytes)){
 
+            LeaveCriticalSection(&critical_section);
+
             return false;
         }
+
+        LeaveCriticalSection(&critical_section);
 
         DWORD bytes = 0;
 
@@ -186,12 +196,18 @@ static unsigned __stdcall recv_com_send_named_pipe(void* arg)
             exit(EXIT_FAILURE);
         }
 
+        EnterCriticalSection(&critical_section);
+
         put_log("\n --- Recv from target PC. --- \n");
 
         if (false == write_windbg_packet_log(buffer, total_bytes)){
 
+            LeaveCriticalSection(&critical_section);
+
             exit(EXIT_FAILURE);
         }
+
+        LeaveCriticalSection(&critical_section);
 
         DWORD bytes = 0;
 

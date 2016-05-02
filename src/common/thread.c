@@ -7,45 +7,45 @@
 
 bool create_thread(thread_func func, void* arg, HANDLE* handle)
 {
-	unsigned thread_ID = 0;
+    unsigned thread_ID = 0;
 
-	*handle = (HANDLE)_beginthreadex(NULL, 0, func, arg, CREATE_SUSPENDED, &thread_ID);
+    *handle = (HANDLE)_beginthreadex(NULL, 0, func, arg, CREATE_SUSPENDED, &thread_ID);
 
-	if (0 == *handle){
+    if (0 == *handle){
 
-		get_last_error(__func__, __LINE__);
+        get_last_error(__func__, __LINE__);
 
-		return false;
-	}
+        return false;
+    }
 
-	return true;
+    return true;
 }
 
 bool resume_thread(HANDLE handle)
 {
-	if (-1 == ResumeThread(handle)){
+    if (-1 == ResumeThread(handle)){
 
-		get_last_error(__func__, __LINE__);
+        get_last_error(__func__, __LINE__);
 
-		return false;
-	}
+        return false;
+    }
 
-	return true;
+    return true;
 }
 
 bool close_thread(HANDLE* handle)
 {
-	if (FALSE == CloseHandle(*handle)){
+    if (FALSE == CloseHandle(*handle)){
 
-		get_last_error(__func__, __LINE__);
+        get_last_error(__func__, __LINE__);
 
-		*handle = NULL;
+        *handle = NULL;
 
-		return false;
-	}
+        return false;
+    }
 
-	*handle = NULL;
+    *handle = NULL;
 
-	return true;
+    return true;
 }
 

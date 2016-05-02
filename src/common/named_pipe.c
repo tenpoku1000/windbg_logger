@@ -9,194 +9,194 @@
 
 bool recv_named_pipe(HANDLE pipe, char* buffer, DWORD* total_bytes)
 {
-	UCHAR* packet_buffer = (UCHAR*)buffer;
+    UCHAR* packet_buffer = (UCHAR*)buffer;
 
-	READ_PACKET_STATE state = READ_PACKET_STATE_FIRST;
+    READ_PACKET_STATE state = READ_PACKET_STATE_FIRST;
 
-	DWORD read_bytes = 1;
+    DWORD read_bytes = 1;
 
-	DWORD recv_bytes = 0;
+    DWORD recv_bytes = 0;
 
-	for (;;){
+    for (;;){
 
-		DWORD bytes = 0;
+        DWORD bytes = 0;
 
-		if (false == read_named_pipe(pipe, packet_buffer, read_bytes, &bytes)){
+        if (false == read_named_pipe(pipe, packet_buffer, read_bytes, &bytes)){
 
-			return false;
-		}
+            return false;
+        }
 
-		if (0 == bytes){
+        if (0 == bytes){
 
-			Sleep(5);
+            Sleep(5);
 
-			continue;
-		}
+            continue;
+        }
 
-		if (READ_PACKET_STATE_FIRST == state){
+        if (READ_PACKET_STATE_FIRST == state){
 
-			if ((BREAKIN_PACKET_BYTE != buffer[0]) &&
-				(PACKET_LEADER_BYTE != buffer[0]) &&
-				(CONTROL_PACKET_LEADER_BYTE != buffer[0])){
+            if ((BREAKIN_PACKET_BYTE != buffer[0]) &&
+                (PACKET_LEADER_BYTE != buffer[0]) &&
+                (CONTROL_PACKET_LEADER_BYTE != buffer[0])){
 
-				continue;
-			}
+                continue;
+            }
 
-			state = READ_PACKET_STATE_HEADER;
+            state = READ_PACKET_STATE_HEADER;
 
-			if (BREAKIN_PACKET_BYTE == buffer[0]){
+            if (BREAKIN_PACKET_BYTE == buffer[0]){
 
-				recv_bytes = 1;
+                recv_bytes = 1;
 
-				break;
-			}
-		}
+                break;
+            }
+        }
 
-		recv_bytes += bytes;
+        recv_bytes += bytes;
 
-		packet_buffer += bytes;
+        packet_buffer += bytes;
 
-		if (READ_PACKET_STATE_HEADER == state){
+        if (READ_PACKET_STATE_HEADER == state){
 
-			if (sizeof(PACKET) > recv_bytes){
+            if (sizeof(PACKET) > recv_bytes){
 
-				read_bytes = sizeof(PACKET) - recv_bytes;
+                read_bytes = sizeof(PACKET) - recv_bytes;
 
-				continue;
-			}
-		}
+                continue;
+            }
+        }
 
-		state = READ_PACKET_STATE_BODY;
+        state = READ_PACKET_STATE_BODY;
 
-		PACKET* packet = (PACKET*)buffer;
+        PACKET* packet = (PACKET*)buffer;
 
-		if (0 < packet->header.ByteCount){
+        if (0 < packet->header.ByteCount){
 
-			DWORD packet_size = sizeof(PACKET) + packet->header.ByteCount + 1;
+            DWORD packet_size = sizeof(PACKET) + packet->header.ByteCount + 1;
 
-			if (packet_size > recv_bytes){
+            if (packet_size > recv_bytes){
 
-				read_bytes = packet_size - recv_bytes;
+                read_bytes = packet_size - recv_bytes;
 
-				continue;
-			}
-		}
+                continue;
+            }
+        }
 
-		break;
-	}
+        break;
+    }
 
-	*total_bytes = recv_bytes;
+    *total_bytes = recv_bytes;
 
-	return true;
+    return true;
 }
 
 bool create_named_pipe(wchar_t* name, HANDLE* pipe)
 {
-	*pipe = CreateNamedPipe(
-		name,
-		PIPE_ACCESS_DUPLEX,
-		PIPE_TYPE_BYTE | PIPE_WAIT,
-		1,
-		PACKET_MAX_SIZE,
-		PACKET_MAX_SIZE,
-		0,
-		NULL
-	);
+    *pipe = CreateNamedPipe(
+        name,
+        PIPE_ACCESS_DUPLEX,
+        PIPE_TYPE_BYTE | PIPE_WAIT,
+        1,
+        PACKET_MAX_SIZE,
+        PACKET_MAX_SIZE,
+        0,
+        NULL
+    );
 
-	if (INVALID_HANDLE_VALUE == *pipe){
+    if (INVALID_HANDLE_VALUE == *pipe){
 
-		get_last_error(__func__, __LINE__);
+        get_last_error(__func__, __LINE__);
 
-		return false;
-	}
+        return false;
+    }
 
-	return true;
+    return true;
 }
 
 bool connect_named_pipe(HANDLE pipe)
 {
-	if (FALSE == ConnectNamedPipe(pipe, NULL)){
+    if (FALSE == ConnectNamedPipe(pipe, NULL)){
 
-		if (ERROR_PIPE_CONNECTED == GetLastError()){
+        if (ERROR_PIPE_CONNECTED == GetLastError()){
 
-			return true;
-		}
+            return true;
+        }
 
-		get_last_error(__func__, __LINE__);
+        get_last_error(__func__, __LINE__);
 
-		return false;
-	}
+        return false;
+    }
 
-	return true;
+    return true;
 }
 
 bool create_file_named_pipe(wchar_t* name, HANDLE* pipe)
 {
-	*pipe = CreateFile(name, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
+    *pipe = CreateFile(name, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
 
-	if (INVALID_HANDLE_VALUE == *pipe){
+    if (INVALID_HANDLE_VALUE == *pipe){
 
-		get_last_error(__func__, __LINE__);
+        get_last_error(__func__, __LINE__);
 
-		return false;
-	}
+        return false;
+    }
 
-	return true;
+    return true;
 }
 
 bool read_named_pipe(HANDLE pipe, LPVOID buffer, DWORD read_size, LPDWORD read_bytes)
 {
-	DWORD avail_bytes = 0;
+    DWORD avail_bytes = 0;
 
-	if (FALSE == PeekNamedPipe(pipe, NULL, 0, NULL, &avail_bytes, NULL)){
+    if (FALSE == PeekNamedPipe(pipe, NULL, 0, NULL, &avail_bytes, NULL)){
 
-		get_last_error(__func__, __LINE__);
+        get_last_error(__func__, __LINE__);
 
-		return false;
-	}
+        return false;
+    }
 
-	if (0 == avail_bytes){
+    if (0 == avail_bytes){
 
-		*read_bytes = 0;
+        *read_bytes = 0;
 
-		return true;
-	}
+        return true;
+    }
 
-	if (FALSE == ReadFile(pipe, buffer, read_size, read_bytes, NULL)){
+    if (FALSE == ReadFile(pipe, buffer, read_size, read_bytes, NULL)){
 
-		get_last_error(__func__, __LINE__);
+        get_last_error(__func__, __LINE__);
 
-		return false;
-	}
+        return false;
+    }
 
-	return true;
+    return true;
 }
 
 bool write_named_pipe(HANDLE pipe, LPVOID buffer, DWORD write_size, LPDWORD written_size)
 {
-	if (FALSE == WriteFile(pipe, buffer, write_size, written_size, NULL)){
+    if (FALSE == WriteFile(pipe, buffer, write_size, written_size, NULL)){
 
-		get_last_error(__func__, __LINE__);
+        get_last_error(__func__, __LINE__);
 
-		return false;
-	}
+        return false;
+    }
 
-	return true;
+    return true;
 }
 
 bool close_named_pipe(HANDLE* pipe)
 {
-	if (FALSE == CloseHandle(*pipe)){
+    if (FALSE == CloseHandle(*pipe)){
 
-		get_last_error(__func__, __LINE__);
+        get_last_error(__func__, __LINE__);
 
-		*pipe = NULL;
+        *pipe = NULL;
 
-		return false;
-	}
+        return false;
+    }
 
-	*pipe = NULL;
+    *pipe = NULL;
 
-	return true;
+    return true;
 }
 

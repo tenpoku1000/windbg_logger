@@ -13,12 +13,12 @@
 #define NAMED_PIPE_NAME_LENGTH 257
 
 typedef struct ini_values_{
-	wchar_t named_pipe[NAMED_PIPE_NAME_LENGTH];
-	bool test_mode;
-	wchar_t UART[7];
-	wchar_t test_send_UART[7];
-	wchar_t test_recv_UART[7];
-	FILE* stream;
+    wchar_t named_pipe[NAMED_PIPE_NAME_LENGTH];
+    bool test_mode;
+    wchar_t UART[7];
+    wchar_t test_send_UART[7];
+    wchar_t test_recv_UART[7];
+    FILE* stream;
 }ini_values;
 
 void set_stream(FILE* fp);

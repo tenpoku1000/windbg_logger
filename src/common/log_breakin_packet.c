@@ -6,6 +6,6 @@
 
 bool write_log_breakin_packet(PACKET* packet, DWORD bytes)
 {
-	return write_windbg_packet_header_log(packet);
+    return write_windbg_packet_header_log(packet);
 }
 

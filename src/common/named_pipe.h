@@ -9,9 +9,9 @@
 #include <stdbool.h>
 
 typedef enum READ_PACKET_STATE_{
-	READ_PACKET_STATE_FIRST,
-	READ_PACKET_STATE_HEADER,
-	READ_PACKET_STATE_BODY,
+    READ_PACKET_STATE_FIRST,
+    READ_PACKET_STATE_HEADER,
+    READ_PACKET_STATE_BODY,
 }READ_PACKET_STATE;
 
 bool recv_named_pipe(HANDLE pipe, char* buffer, DWORD* total_bytes);
